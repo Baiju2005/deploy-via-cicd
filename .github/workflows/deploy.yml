@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
 
           script: |
-            cd /var/www/cicd-deploy
+            cd /home/baiju/deploy-via-cicd
 
             git pull origin main
 
