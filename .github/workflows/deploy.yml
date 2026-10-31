@@ -1,0 +1,34 @@
+
+name: Deploy Node.js Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy using SSH
+        uses: appleboy/ssh-action@v1.2.0
+
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+
+          script: |
+            cd /var/www/cicd-deploy
+
+            git pull origin main
+
+            npm install
+
+            pm2 restart cicd-deploy || pm2 start index.js --name cicd-deploy
+
+            pm2 save
+
+            echo "Deployment completed successfully!"
