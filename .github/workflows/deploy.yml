@@ -21,14 +21,33 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
 
           script: |
+            echo "========== DEPLOYMENT STARTED =========="
+
+            echo "STEP 1: Checking VPS connection"
+            whoami
+            pwd
+
+            echo "STEP 2: Going to project directory"
             cd /home/baiju/deploy-via-cicd
+            echo "SUCCESS: Project directory found"
 
+            echo "STEP 3: Checking Git status"
+            git status
+
+            echo "STEP 4: Pulling latest code"
             git pull origin main
+            echo "SUCCESS: Git pull completed"
 
+            echo "STEP 5: Installing dependencies"
             npm install
+            echo "SUCCESS: Dependencies installed"
 
+            echo "STEP 6: Restarting PM2"
             pm2 restart cicd-deploy || pm2 start index.js --name cicd-deploy
+            echo "SUCCESS: PM2 application restarted"
 
+            echo "STEP 7: Saving PM2"
             pm2 save
+            echo "SUCCESS: PM2 saved"
 
-            echo "Deployment completed successfully!"
+            echo "========== DEPLOYMENT COMPLETED =========="
